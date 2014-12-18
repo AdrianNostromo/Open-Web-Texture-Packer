@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Game A</title>
+
+    <link rel="stylesheet" href="css/styles.css" type="text/css" />
+
+    <script type="text/javascript" src="js/Main.js"></script>
+</head>
+<body onload="mainFunction()">
+
+<input type="file" id="files" name="files[]" multiple />
+<output id="list"></output>
+
+<script>
+function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+
+    // files is a FileList of File objects. List some properties.
+    for (var i = 0, f; f = files[i]; i++) {
+        console.log("File oppened; Name:" + f.name + ", type:"+f.type+"");
+
+        if (!f.type.match('image.*')) {
+            continue;
+        }
+
+        var reader = new FileReader();
+
+        // Closure to capture the file information.
+        reader.onload = function(e) {
+            img.src = e.target.result
+        };
+
+        // Read in the image file as a data URL.
+        reader.readAsDataURL(f);
+    }
+}
+  
+  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+</script>
+
+<script>
+    function mainFunction() {
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+          console.log("Files appi enabled.");
+        } else {
+          alert('The File APIs are not fully supported in this browser.');
+        }
+    }
+</script>
+</body>
+</html>
