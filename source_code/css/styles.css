@@ -1,0 +1,53 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+html {
+    display: block;
+    width:100%;
+	height:100%;
+}
+
+body {
+    display: block;
+    width:100%;
+	height:100%;
+}
+
+.owtp {
+	display: block;
+	position: relative;
+	
+	width:100%;
+	height:100%;
+	
+	background-color: #ffffff;
+}
+
+.owtp .dropZone {
+	display: block;
+	position: absolute;
+	
+	width:130px;
+	height:40px;
+	
+	padding:0px;
+	
+	border: 6px dashed #ccc;
+}
+
+.owtp .dropZone.hover {
+	border: 10px dashed #0c0;
+}
+
+.owtp .filesList {
+	display: block;
+	position: absolute;
+	
+	margin-top:52px; 
+	width:142px;
+	height:calc(100% - 52px);
+	
+	background-color: #eeeeee;
+}

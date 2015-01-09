@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Game A</title>
+
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <link rel="stylesheet" type="text/css" href="css/treeList.css" />
+    
+    <script type="text/javascript" src="js/Main.js"></script>
+    
+    <!-- Tree menu taken from: http://www.thecssninja.com/css/css-tree-menu -->
+    
+    <script>
+        var preview;
+        
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            
+            preview = document.getElementById('preview');
+            
+            for(var i=0;i<event.dataTransfer.files.length;i++) {
+                var entryFile = event.dataTransfer.files[i];
+                var entryItem = event.dataTransfer.items[i];
+                if(entryFile) {
+                    if(entryFile.type === "image/png") {
+                        processFile(entryFile);
+                    }else if(entryFile.type === "") {
+                        var folderEntry = entryItem.webkitGetAsEntry();
+                        if(!folderEntry) {
+                            console.log("Folder can't be processed. Name: " + entryFile.name);
+                            
+                            continue ;
+                        }
+                        traverseFileTree(folderEntry);
+                    }else {
+                        console.log("Unsupported file type. Only images and folders allowed. Name: " + entryFile.name);
+                    }
+                }
+            }
+        }
+        
+        function processFile(file) {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var image = new Image();
+                image.src = event.target.result;
+                //image.width = 50; // a fake resize
+                preview.appendChild(image);
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        function traverseFileTree(item, path) {
+            path = path || "";
+            if (item.isFile) {
+                // Get file
+                item.file(function(file) {
+                    processFile(file);
+                });
+            } else if (item.isDirectory) {
+                // Get folder contents
+                var dirReader = item.createReader();
+                dirReader.readEntries(function(entries) {
+                    for (var i=0; i<entries.length; i++) {
+                       traverseFileTree(entries[i], path + item.name + "/");
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+<body onload="mainFunction()">
+
+<div class="owtp">
+    <div class="dropZone" ondrop="drop(event)" ondragover="allowDrop(event)">Drop images here</div>
+    <div class="filesList">
+        <ol class="tree">
+            <li class="file"><a href="">File 1</a></li>
+            <li>
+                <label for="folder2">Folder 2</label> <input type="checkbox" id="folder2" /> 
+                <ol>
+                    <li class="file"><a href="">File 1</a></li>
+                    <li>
+                        <label for="subfolder2">Subfolder 1</label> <input type="checkbox" id="subfolder2" /> 
+                        <ol>
+                            <li class="file"><a href="">Subfile 1</a></li>
+                            <li class="file"><a href="">Subfile 2</a></li>
+                            <li class="file"><a href="">Subfile 3</a></li>
+                            <li class="file"><a href="">Subfile 4</a></li>
+                            <li class="file"><a href="">Subfile 5</a></li>
+                            <li class="file"><a href="">Subfile 6</a></li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="preview"></div>
+
+<script>
+    function mainFunction() {
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+          console.log("Files appi enabled.");
+        } else {
+          alert('The File APIs are not fully supported in this browser.');
+        }
+    }
+</script>
+</body>
+</html>
+
+
+<!--<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Game A</title>
+
+    <link rel="stylesheet" href="css/styles.css" type="text/css" />
+
+    <script type="text/javascript" src="js/Main.js"></script>
+</head>
+<body onload="mainFunction()">
+
+<input type="file" id="files" name="files[]" multiple />
+<output id="list"></output>
+
+<script>
+    function handleFileSelect(evt) {
+        var files = evt.target.files; // FileList object
+        
+        // files is a FileList of File objects. List some properties.
+        for (var i = 0, f; f = files[i]; i++) {
+            console.log("File oppened; Name:" + f.name + ", type:"+f.type+"");
+
+            if (!f.type.match('image.*')) {
+                continue;
+            }
+
+            var reader = new FileReader();
+
+            // Closure to capture the file information.
+            reader.onload = function(e) {
+                img.src = e.target.result
+            };
+
+            // Read in the image file as a data URL.
+            reader.readAsDataURL(f);
+        }
+    }
+        
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+</script>
+
+<script>
+    function mainFunction() {
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+          console.log("Files appi enabled.");
+        } else {
+          alert('The File APIs are not fully supported in this browser.');
+        }
+    }
+</script>
+</body>
+</html>-->
+<!--
+<ol class="tree">
+            <li>
+                <label for="folder1">Folder 1</label> <input type="checkbox" checked disabled id="folder1" /> 
+                <ol>
+                    <li class="file"><a href="document.html.pdf">File 1</a></li>
+                    <li>
+                        <label for="subfolder1">Subfolder 1</label> <input type="checkbox" id="subfolder1" /> 
+                        <ol>
+                            <li class="file"><a href="">Filey 1</a></li>
+                            <li>
+                                <label for="subsubfolder1">Subfolder 1</label> <input type="checkbox" id="subsubfolder1" /> 
+                                <ol>
+                                    <li class="file"><a href="">File 1</a></li>
+                                    <li>
+                                        <label for="subsubfolder2">Subfolder 1</label> <input type="checkbox" id="subsubfolder2" /> 
+                                        <ol>
+                                            <li class="file"><a href="">Subfile 1</a></li>
+                                            <li class="file"><a href="">Subfile 2</a></li>
+                                            <li class="file"><a href="">Subfile 3</a></li>
+                                            <li class="file"><a href="">Subfile 4</a></li>
+                                            <li class="file"><a href="">Subfile 5</a></li>
+                                            <li class="file"><a href="">Subfile 6</a></li>
+                                        </ol>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li class="file"><a href="">File 3</a></li>
+                            <li class="file"><a href="">File 4</a></li>
+                            <li class="file"><a href="">File 5</a></li>
+                            <li class="file"><a href="">File 6</a></li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <label for="folder2">Folder 2</label> <input type="checkbox" id="folder2" /> 
+                <ol>
+                    <li class="file"><a href="">File 1</a></li>
+                    <li>
+                        <label for="subfolder2">Subfolder 1</label> <input type="checkbox" id="subfolder2" /> 
+                        <ol>
+                            <li class="file"><a href="">Subfile 1</a></li>
+                            <li class="file"><a href="">Subfile 2</a></li>
+                            <li class="file"><a href="">Subfile 3</a></li>
+                            <li class="file"><a href="">Subfile 4</a></li>
+                            <li class="file"><a href="">Subfile 5</a></li>
+                            <li class="file"><a href="">Subfile 6</a></li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <label for="folder3">Folder 3</label> <input type="checkbox" id="folder3" /> 
+                <ol>
+                    <li class="file"><a href="">File 1</a></li>
+                    <li>
+                        <label for="subfolder3">Subfolder 1</label> <input type="checkbox" id="subfolder3" /> 
+                        <ol>
+                            <li class="file"><a href="">Subfile 1</a></li>
+                            <li class="file"><a href="">Subfile 2</a></li>
+                            <li class="file"><a href="">Subfile 3</a></li>
+                            <li class="file"><a href="">Subfile 4</a></li>
+                            <li class="file"><a href="">Subfile 5</a></li>
+                            <li class="file"><a href="">Subfile 6</a></li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <label for="folder4">Folder 4</label> <input type="checkbox" id="folder4" /> 
+                <ol>
+                    <li class="file"><a href="">File 1</a></li>
+                    <li>
+                        <label for="subfolder4">Subfolder 1</label> <input type="checkbox" id="subfolder4" /> 
+                        <ol>
+                            <li class="file"><a href="">Subfile 1</a></li>
+                            <li class="file"><a href="">Subfile 2</a></li>
+                            <li class="file"><a href="">Subfile 3</a></li>
+                            <li class="file"><a href="">Subfile 4</a></li>
+                            <li class="file"><a href="">Subfile 5</a></li>
+                            <li class="file"><a href="">Subfile 6</a></li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <label for="folder5">Folder 5</label> <input type="checkbox" id="folder5" /> 
+                <ol>
+                    <li class="file"><a href="">File 1</a></li>
+                    <li>
+                        <label for="subfolder5">Subfolder 1</label> <input type="checkbox" id="subfolder5" /> 
+                        <ol>
+                            <li class="file"><a href="">Subfile 1</a></li>
+                            <li class="file"><a href="">Subfile 2</a></li>
+                            <li class="file"><a href="">Subfile 3</a></li>
+                            <li class="file"><a href="">Subfile 4</a></li>
+                            <li class="file"><a href="">Subfile 5</a></li>
+                            <li class="file"><a href="">Subfile 6</a></li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+        -->
